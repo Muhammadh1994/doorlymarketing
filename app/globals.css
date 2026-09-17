@@ -1,0 +1,458 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-display);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --color-postal-red: var(--postal-red);
+  --color-postal-red-foreground: var(--postal-red-foreground);
+  --color-postal-blue: var(--postal-blue);
+  --color-postal-blue-foreground: var(--postal-blue-foreground);
+  --color-postal-gold: var(--postal-gold);
+  --color-postal-gold-foreground: var(--postal-gold-foreground);
+  --color-postal-teal: var(--postal-teal);
+  --color-postal-teal-foreground: var(--postal-teal-foreground);
+  --color-kraft: var(--kraft);
+  --color-kraft-foreground: var(--kraft-foreground);
+  --color-paper: var(--paper);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --shadow-panel: 0 20px 45px -25px oklch(0 0 0 / 0.35);
+}
+
+:root {
+  --background: oklch(0.985 0.004 80);
+  --foreground: oklch(0.18 0.006 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.006 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.006 60);
+  --primary: oklch(0.52 0.2 27);
+  --primary-foreground: oklch(0.99 0.005 80);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0.004 75);
+  /* Darkened slightly from a neutral 0.48 so body copy holds contrast now
+     that it sits directly over the scroll-scene's photos (see
+     .scroll-scene-scrim / .scene-copy) instead of always on a paper card. */
+  --muted-foreground: oklch(0.4 0.012 60);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.006 70);
+  --input: oklch(0.9 0.006 70);
+  --ring: oklch(0.52 0.2 27 / 0.5);
+
+  /* Postal brand accents — a full five-role palette (graded warmer and
+     more saturated to match the reference photo's honey-wood desk + bold
+     postcard mood) rather than red+blue alone. postal-red stays the
+     primary action / Featured-tier color; postal-blue deepens into a true
+     navy carried by the reach/stats band; postal-gold (mustard) and
+     postal-teal round the set out to mustard/gold + teal, per DESIGN.md. */
+  --postal-red: oklch(0.52 0.2 27);
+  --postal-red-foreground: oklch(0.99 0.005 80);
+  --postal-blue: oklch(0.28 0.08 258);
+  --postal-blue-foreground: oklch(0.99 0.005 80);
+  --postal-gold: oklch(0.74 0.14 85);
+  --postal-gold-foreground: oklch(0.28 0.04 75);
+  --postal-teal: oklch(0.42 0.09 200);
+  --postal-teal-foreground: oklch(0.99 0.005 80);
+  --kraft: oklch(0.87 0.035 75);
+  --kraft-foreground: oklch(0.32 0.03 60);
+  --paper: oklch(0.985 0.004 80);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+    scroll-padding-top: 5rem;
+  }
+  ::selection {
+    background: var(--postal-red);
+    color: var(--postal-red-foreground);
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 999px;
+    border: 3px solid var(--background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--muted-foreground);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Postcard ad-space tiles: subtle lift + ink-stamp reveal on hover/focus. */
+.ad-tile {
+  position: relative;
+  transition:
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+.ad-tile:active {
+  transition-duration: 100ms;
+  transform: scale(0.99);
+}
+
+.ad-tile:focus-visible {
+  outline: none;
+  z-index: 2;
+  /* Two-tone halo (paper, then postal red) so the ring reads clearly
+     against every tile color (red, blue, kraft) and the page background. */
+  box-shadow:
+    0 0 0 2px var(--paper),
+    0 0 0 5px var(--postal-red);
+}
+
+.ad-tile-postmark {
+  opacity: 0;
+  transform: scale(0.85) rotate(-14deg);
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.ad-tile-cta {
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+}
+
+/* Always-on focus affordance (keyboard, any pointer type). Kept separate
+   from the hover-only box-shadow below so the focus ring is never
+   clobbered by the hover lift shadow on devices that have both. */
+.ad-tile:focus-visible .ad-tile-postmark {
+  opacity: 0.9;
+  transform: scale(1) rotate(-8deg);
+}
+
+.ad-tile:focus-visible .ad-tile-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ad-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 28px -16px oklch(0 0 0 / 0.35);
+    z-index: 1;
+  }
+
+  .ad-tile:hover .ad-tile-postmark {
+    opacity: 0.9;
+    transform: scale(1) rotate(-8deg);
+  }
+
+  .ad-tile:hover .ad-tile-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: none) {
+  .ad-tile-cta {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-tile,
+  .ad-tile-postmark,
+  .ad-tile-cta {
+    transition: none;
+  }
+}
+
+/* Client correction: no more "paper panel" cards floating above the scene
+   — content now sits directly on the fixed photographic scroll-scene
+   (components/scroll-scene.tsx). Legibility over a busy, brightness-
+   varying photo comes from two things instead of a card: the scene's own
+   full-bleed paper wash (`.scroll-scene-scrim` below) and this halo, a
+   paper-toned `text-shadow` that reads as a soft glow behind each glyph.
+   `text-shadow` is inherited, so apply once on a heading/paragraph's
+   wrapping element rather than on every child. No box, no edge — just
+   contrast insurance for the darkest/busiest frame. */
+.scene-copy {
+  text-shadow:
+    0 1px 3px oklch(from var(--paper) l c h / 0.9),
+    0 3px 20px oklch(from var(--paper) l c h / 0.55);
+}
+
+/* The scene's full-bleed wash: a paper-toned gradient over all four photo
+   layers so body copy — sitting directly on the photos now, no card
+   behind it — holds contrast whether the frame underneath is a bright sky
+   or a dark doorway. Strong enough to guarantee that at the darkest,
+   busiest part of any of the four photos; still translucent enough that
+   the photos' own motion reads as the actual backdrop rather than a flat
+   tint. Slightly stronger at the very top/bottom where it meets the
+   sticky header and footer. */
+.scroll-scene-scrim {
+  background: linear-gradient(
+    180deg,
+    oklch(from var(--paper) l c h / 0.82) 0%,
+    oklch(from var(--paper) l c h / 0.68) 18%,
+    oklch(from var(--paper) l c h / 0.68) 82%,
+    oklch(from var(--paper) l c h / 0.82) 100%
+  );
+}
+
+/* Full-page scroll-driven backdrop (components/scroll-scene.tsx): four
+   fixed photo layers staged against *total document* scroll progress via
+   native `scroll(root)` timelines — no scroll listener, off the main
+   thread. Linear against scroll is deliberate: scroll position is already
+   the user's own "easing" input, so retiming it with an eased curve would
+   fight the scrubbing and feel laggy.
+
+   Each layer runs a continuous slow Ken Burns scale/pan for as long as
+   it's active — it never sits perfectly still — and the handoff between
+   layers is staged as forward motion through space rather than a flat
+   crossfade: the outgoing layer keeps scaling up and blurs out as if
+   passing the camera, while the incoming layer starts scaled up and
+   blurred (as if still approaching) and resolves to sharp/normal scale.
+   Both layers' entry/exit stops line up on the same absolute scroll
+   window (each `animation-range` below overlaps the next), so the two
+   motions cross in lockstep instead of one simply fading over the other. */
+.scroll-scene-layer {
+  opacity: 0;
+  animation: linear both;
+  animation-timeline: scroll(root);
+  will-change: transform, opacity, filter;
+}
+
+.scroll-scene-layer[data-scene="van"] {
+  animation-name: scene-van;
+  animation-range: 0% 32%;
+}
+.scroll-scene-layer[data-scene="mailboxes"] {
+  animation-name: scene-mailboxes;
+  animation-range: 18% 55%;
+}
+.scroll-scene-layer[data-scene="street"] {
+  animation-name: scene-street;
+  animation-range: 45% 80%;
+}
+.scroll-scene-layer[data-scene="door"] {
+  animation-name: scene-door;
+  animation-range: 70% 100%;
+}
+
+/* van — first layer on screen at scroll 0, so no blurred "approach" entry,
+   just an immediate, already-arrived frame that slowly zooms/drifts before
+   pushing past the camera into the mailboxes handoff (55%-100% of its own
+   range == the same absolute 18%-32% scroll window mailboxes enters on). */
+@keyframes scene-van {
+  0% {
+    opacity: 1;
+    transform: scale(1.02) translate(0%, 0%);
+    filter: blur(0px);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.07) translate(1.2%, 0%);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.16) translate(2.4%, -0.5%);
+    filter: blur(7px);
+  }
+}
+
+@keyframes scene-mailboxes {
+  0% {
+    opacity: 0;
+    transform: scale(1.16) translate(-1.6%, 1%);
+    filter: blur(7px);
+  }
+  38% {
+    opacity: 1;
+    transform: scale(1.02) translate(-0.4%, 0.3%);
+    filter: blur(0px);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1.07) translate(0.5%, -0.6%);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.16) translate(1.1%, -1.2%);
+    filter: blur(7px);
+  }
+}
+
+@keyframes scene-street {
+  0% {
+    opacity: 0;
+    transform: scale(1.16) translate(1.8%, -0.6%);
+    filter: blur(7px);
+  }
+  29% {
+    opacity: 1;
+    transform: scale(1.02) translate(0.6%, -0.2%);
+    filter: blur(0px);
+  }
+  71% {
+    opacity: 1;
+    transform: scale(1.08) translate(-0.9%, 0.4%);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.17) translate(-1.8%, 1%);
+    filter: blur(7px);
+  }
+}
+
+/* door — last layer, so no exit pass: it just keeps closing in, ending the
+   scroll on the tightest, sharpest frame of the four (as if the walk ends
+   at the door). */
+@keyframes scene-door {
+  0% {
+    opacity: 0;
+    transform: scale(1.16) translate(-1.4%, 1%);
+    filter: blur(7px);
+  }
+  33% {
+    opacity: 1;
+    transform: scale(1.02) translate(-0.3%, 0.3%);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1) translate(0%, -0.7%);
+    filter: blur(0px);
+  }
+}
+
+/* prefers-reduced-motion freezes on the mailboxes frame — a representative
+   "on the route" beat — rather than animating or cutting to nothing. No
+   transform/filter is set outside the animation, so freezing removes the
+   pan/zoom/blur entirely rather than pausing mid-motion. The scene is
+   already unmounted below `sm:` in the component itself (see
+   scroll-scene.tsx for why), so this only affects sm:+ viewports. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-scene-layer {
+    animation: none;
+    opacity: 0;
+  }
+  .scroll-scene-layer[data-scene="mailboxes"] {
+    opacity: 1;
+  }
+}

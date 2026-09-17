@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 500" width="360" height="500" role="img" aria-label="Sample postcard ad: WE'RE HIRING, WEST END GOODS">
+  <defs>
+    <clipPath id="clip-11"><rect x="0" y="0" width="360" height="500" rx="22" /></clipPath>
+    <linearGradient id="g-11" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBC7B3" />
+      <stop offset="1" stop-color="#F2643C" />
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#clip-11)">
+    <rect x="0" y="0" width="360" height="500" fill="#FBF8F2" />
+
+    <!-- Bold flat-color ad panel -->
+    <rect x="0" y="0" width="360" height="288" fill="#F2643C" />
+    <text x="28" y="138" font-family="'Space Grotesk', 'Arial Black', sans-serif" font-weight="700" font-size="36" fill="#FFF8EC" letter-spacing="0.5">
+      <tspan x="28" dy="0">WE'RE</tspan>
+      <tspan x="28" dy="40">HIRING</tspan>
+    </text>
+    <rect x="28" y="242" width="46" height="6" rx="3" fill="#FFF8EC" opacity="0.85" />
+
+    <!-- Duotone "photo" stand-in panel -->
+    <rect x="0" y="288" width="360" height="148" fill="#B23F22" opacity="0.14" />
+    <rect x="197.2" y="302.96000000000004" width="124" height="124" rx="17.360000000000003" fill="url(#g-11)" transform="rotate(8 259.2 364.96000000000004)" />
+    <rect x="20" y="396" width="122.39999999999999" height="26" rx="13" fill="#FFFFFF" />
+    <text x="81.19999999999999" y="414" font-family="'Space Mono', ui-monospace, monospace" font-size="10" font-weight="700" fill="#B23F22" text-anchor="middle" letter-spacing="0.5">WEST END GOODS</text>
+
+    <!-- White postcard-back strip: greeked address + USPS truck indicia -->
+    <rect x="0" y="436" width="360" height="64" fill="#FFFFFF" />
+    <line x1="0" y1="436" x2="360" y2="436" stroke="#E7E1D4" stroke-width="1.5" />
+    <rect x="20" y="452" width="86" height="4" rx="2" fill="#C9BFAE" />
+    <rect x="20" y="464" width="64" height="4" rx="2" fill="#C9BFAE" />
+    <rect x="20" y="476" width="100" height="4" rx="2" fill="#C9BFAE" />
+    
+  <g transform="translate(298 454) scale(1)" fill="none" stroke="#3A332B" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M2 20 V9 a2 2 0 0 1 2-2 h16 v13 z" />
+    <path d="M20 12 h6 l4 5 v3 h-10 z" />
+    <circle cx="9" cy="23" r="2.6" fill="#3A332B" stroke="none" />
+    <circle cx="25" cy="23" r="2.6" fill="#3A332B" stroke="none" />
+  </g>
+  </g>
+  <rect x="0.75" y="0.75" width="358.5" height="498.5" rx="21.5" fill="none" stroke="#00000014" stroke-width="1.5" />
+</svg>
