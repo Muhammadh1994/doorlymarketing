@@ -312,147 +312,260 @@
   );
 }
 
-/* Full-page scroll-driven backdrop (components/scroll-scene.tsx): four
-   fixed photo layers staged against *total document* scroll progress via
-   native `scroll(root)` timelines — no scroll listener, off the main
-   thread. Linear against scroll is deliberate: scroll position is already
-   the user's own "easing" input, so retiming it with an eased curve would
-   fight the scrubbing and feel laggy.
+/* Full-page scroll-driven backdrop (components/scroll-scene.tsx): FOUR real
+   photos (mail truck -> mailboxes -> suburban street -> front door) treated
+   as one continuous camera move rather than four independent clips.
 
-   Each layer runs a continuous slow Ken Burns scale/pan for as long as
-   it's active — it never sits perfectly still — and the handoff between
-   layers is staged as forward motion through space rather than a flat
-   crossfade: the outgoing layer keeps scaling up and blurs out as if
-   passing the camera, while the incoming layer starts scaled up and
-   blurred (as if still approaching) and resolves to sharp/normal scale.
-   Both layers' entry/exit stops line up on the same absolute scroll
-   window (each `animation-range` below overlaps the next), so the two
-   motions cross in lockstep instead of one simply fading over the other. */
+   Client correction (round 2): "I want it to be connected." The fix isn't
+   softer crossfades — it's a shared camera. The scale/pan formulas below
+   are evaluated at *global* document scroll percent `t` (0-100) and are the
+   same linear functions for every layer, so adjacent layers agree on
+   scale/pan exactly at the moment they hand off — no jump, no zoom-out, no
+   reversed pan between layers. Each layer's own `@keyframes` stops are just
+   this shared function evaluated at that layer's own `animation-range`
+   boundaries, mapped onto that layer's local 0%-100%.
+
+   camera: scale(t) = 1.00 + 0.45 * (t/100)
+           pan(t)   = (5.5 * (t/100)%, -3 * (t/100)%)   — rightward + up
+
+   Each layer is active across its own `animation-range` (global document
+   scroll %), each pair overlapping by 8 points so the *handoff* — not a
+   hard cut — happens inside that overlap:
+     van        (mail-truck-driving.jpg)  0%  - 32%
+     mailboxes  (mailboxes-row.jpg)       24% - 56%
+     street     (suburban-street.jpg)     48% - 80%
+     door       (house-front-door.jpg)    72% - 100%
+
+   Inside each 8-point overlap, both the outgoing and incoming layer ramp
+   `filter: blur()` 0 -> 28px -> 0 in lockstep, and swap opacity (1->0 /
+   0->1) so the swap *completes exactly as the blur peaks* — the two photos
+   are only ever visible at the same time while both are already heavily
+   blurred, which is what actually hides the seam (a clean, sharp
+   side-by-side never happens). At that same peak keyframe both layers pick
+   up an additional `scale(1.16, 0.95)` anisotropic stretch along the pan's
+   own (rightward) axis, composed on top of the base camera transform —
+   `filter: blur()` alone is isotropic, this stretch is what fakes
+   directional motion blur that actually matches the camera's own pan.
+   Outside its own overlap windows a layer is fully opaque and sharp (blur
+   0, opacity 1, no stretch), just riding the shared camera. `van` (the
+   first layer) has no incoming overlap and `door` (the last) has no
+   outgoing one — there's nothing before the first frame or after the last
+   to hand off with.
+
+   All of it runs off a native `scroll(root)` timeline (`animation-timeline:
+   scroll(root)`, `animation-range`), so it's off the main thread and needs
+   no scroll listener.
+
+   Each layer's full `animation` shorthand (including its own name) is
+   declared directly on its own `[data-scene="…"]` rule rather than split
+   across a shared `.scroll-scene-layer { animation: linear both; }` base
+   rule plus a per-layer `animation-name` override: with no name, that
+   shared shorthand's `<keyframes-name>` component resolves to `none`, and
+   Lightning CSS's minifier (correctly, *for that rule in isolation*)
+   collapses the whole shorthand down to `animation: none`, silently
+   dropping `linear`/`both` — which then never reappears once a more
+   specific rule merges in a real `animation-name`, since the cascade
+   recombines longhands per-property, not per-shorthand. Keeping each
+   layer's shorthand whole avoids that trap. */
 .scroll-scene-layer {
-  opacity: 0;
-  animation: linear both;
-  animation-timeline: scroll(root);
-  will-change: transform, opacity, filter;
+  position: absolute;
+  inset: 0;
+  will-change: transform, filter, opacity;
 }
 
 .scroll-scene-layer[data-scene="van"] {
-  animation-name: scene-van;
+  animation: scroll-scene-van linear both;
+  animation-timeline: scroll(root);
   animation-range: 0% 32%;
 }
 .scroll-scene-layer[data-scene="mailboxes"] {
-  animation-name: scene-mailboxes;
-  animation-range: 18% 55%;
+  animation: scroll-scene-mailboxes linear both;
+  animation-timeline: scroll(root);
+  animation-range: 24% 56%;
 }
 .scroll-scene-layer[data-scene="street"] {
-  animation-name: scene-street;
-  animation-range: 45% 80%;
+  animation: scroll-scene-street linear both;
+  animation-timeline: scroll(root);
+  animation-range: 48% 80%;
 }
 .scroll-scene-layer[data-scene="door"] {
-  animation-name: scene-door;
-  animation-range: 70% 100%;
+  animation: scroll-scene-door linear both;
+  animation-timeline: scroll(root);
+  animation-range: 72% 100%;
 }
 
-/* van — first layer on screen at scroll 0, so no blurred "approach" entry,
-   just an immediate, already-arrived frame that slowly zooms/drifts before
-   pushing past the camera into the mailboxes handoff (55%-100% of its own
-   range == the same absolute 18%-32% scroll window mailboxes enters on). */
-@keyframes scene-van {
+/* van: opens fully opaque/sharp (no incoming overlap — it's the first
+   frame of the sequence); its only handoff is outgoing, into mailboxes,
+   across global 24%-32% (local 75%-100%). */
+@keyframes scroll-scene-van {
   0% {
-    opacity: 1;
-    transform: scale(1.02) translate(0%, 0%);
+    transform: translate(0%, 0%) scale(1) scale(1, 1);
     filter: blur(0px);
+    opacity: 1;
   }
-  55% {
-    opacity: 1;
-    transform: scale(1.07) translate(1.2%, 0%);
+  75% {
+    transform: translate(1.32%, -0.72%) scale(1.108) scale(1, 1);
     filter: blur(0px);
+    opacity: 1;
+  }
+  87.5% {
+    transform: translate(1.54%, -0.84%) scale(1.126) scale(1.16, 0.95);
+    filter: blur(28px);
+    opacity: 0;
   }
   100% {
+    transform: translate(1.76%, -0.96%) scale(1.144) scale(1, 1);
+    filter: blur(0px);
     opacity: 0;
-    transform: scale(1.16) translate(2.4%, -0.5%);
-    filter: blur(7px);
   }
 }
 
-@keyframes scene-mailboxes {
+/* mailboxes: incoming overlap with van across global 24%-32% (local
+   0%-25%), then rides alone, then outgoing overlap with street across
+   global 48%-56% (local 75%-100%). */
+@keyframes scroll-scene-mailboxes {
   0% {
+    transform: translate(1.32%, -0.72%) scale(1.108) scale(1, 1);
+    filter: blur(0px);
     opacity: 0;
-    transform: scale(1.16) translate(-1.6%, 1%);
-    filter: blur(7px);
   }
-  38% {
+  12.5% {
+    transform: translate(1.54%, -0.84%) scale(1.126) scale(1.16, 0.95);
+    filter: blur(28px);
     opacity: 1;
-    transform: scale(1.02) translate(-0.4%, 0.3%);
-    filter: blur(0px);
   }
-  72% {
-    opacity: 1;
-    transform: scale(1.07) translate(0.5%, -0.6%);
+  25% {
+    transform: translate(1.76%, -0.96%) scale(1.144) scale(1, 1);
     filter: blur(0px);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(2.64%, -1.44%) scale(1.216) scale(1, 1);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  87.5% {
+    transform: translate(2.86%, -1.56%) scale(1.234) scale(1.16, 0.95);
+    filter: blur(28px);
+    opacity: 0;
   }
   100% {
+    transform: translate(3.08%, -1.68%) scale(1.252) scale(1, 1);
+    filter: blur(0px);
     opacity: 0;
-    transform: scale(1.16) translate(1.1%, -1.2%);
-    filter: blur(7px);
   }
 }
 
-@keyframes scene-street {
+/* street: incoming overlap with mailboxes across global 48%-56% (local
+   0%-25%), then rides alone, then outgoing overlap with door across
+   global 72%-80% (local 75%-100%). */
+@keyframes scroll-scene-street {
   0% {
+    transform: translate(2.64%, -1.44%) scale(1.216) scale(1, 1);
+    filter: blur(0px);
     opacity: 0;
-    transform: scale(1.16) translate(1.8%, -0.6%);
-    filter: blur(7px);
   }
-  29% {
+  12.5% {
+    transform: translate(2.86%, -1.56%) scale(1.234) scale(1.16, 0.95);
+    filter: blur(28px);
     opacity: 1;
-    transform: scale(1.02) translate(0.6%, -0.2%);
-    filter: blur(0px);
   }
-  71% {
-    opacity: 1;
-    transform: scale(1.08) translate(-0.9%, 0.4%);
+  25% {
+    transform: translate(3.08%, -1.68%) scale(1.252) scale(1, 1);
     filter: blur(0px);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(3.96%, -2.16%) scale(1.324) scale(1, 1);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  87.5% {
+    transform: translate(4.18%, -2.28%) scale(1.342) scale(1.16, 0.95);
+    filter: blur(28px);
+    opacity: 0;
   }
   100% {
+    transform: translate(4.4%, -2.4%) scale(1.36) scale(1, 1);
+    filter: blur(0px);
     opacity: 0;
-    transform: scale(1.17) translate(-1.8%, 1%);
-    filter: blur(7px);
   }
 }
 
-/* door — last layer, so no exit pass: it just keeps closing in, ending the
-   scroll on the tightest, sharpest frame of the four (as if the walk ends
-   at the door). */
-@keyframes scene-door {
+/* door: incoming overlap with street across global 72%-80% (local
+   0%-28.571% — a shorter local window than the other layers' 25%, since
+   door's own range is only 28 points, not 32; it's the last layer and
+   never hands off again), then rides alone to the end of scroll fully
+   opaque/sharp. */
+@keyframes scroll-scene-door {
   0% {
-    opacity: 0;
-    transform: scale(1.16) translate(-1.4%, 1%);
-    filter: blur(7px);
-  }
-  33% {
-    opacity: 1;
-    transform: scale(1.02) translate(-0.3%, 0.3%);
+    transform: translate(3.96%, -2.16%) scale(1.324) scale(1, 1);
     filter: blur(0px);
+    opacity: 0;
+  }
+  14.286% {
+    transform: translate(4.18%, -2.28%) scale(1.342) scale(1.16, 0.95);
+    filter: blur(28px);
+    opacity: 1;
+  }
+  28.571% {
+    transform: translate(4.4%, -2.4%) scale(1.36) scale(1, 1);
+    filter: blur(0px);
+    opacity: 1;
   }
   100% {
-    opacity: 1;
-    transform: scale(1.1) translate(0%, -0.7%);
+    transform: translate(5.5%, -3%) scale(1.45) scale(1, 1);
     filter: blur(0px);
+    opacity: 1;
   }
 }
 
-/* prefers-reduced-motion freezes on the mailboxes frame — a representative
-   "on the route" beat — rather than animating or cutting to nothing. No
-   transform/filter is set outside the animation, so freezing removes the
-   pan/zoom/blur entirely rather than pausing mid-motion. The scene is
-   already unmounted below `sm:` in the component itself (see
-   scroll-scene.tsx for why), so this only affects sm:+ viewports. */
+/* Shared, static (non-scroll-linked) color grade sitting above all four
+   photos: a soft vignette in the page's own warm ink tone, deliberately not
+   a moody cinematic teal-orange grade — this is a light, daytime
+   residential-route mood (see DESIGN.md World). */
+.scroll-scene-grade {
+  background: radial-gradient(
+    140% 120% at 50% 38%,
+    transparent 55%,
+    oklch(from var(--kraft-foreground) l c h / 0.22) 100%
+  );
+  mix-blend-mode: multiply;
+}
+
+/* Low-opacity warm `--kraft` soft-light wash that pulls all four photos'
+   individual white-balance/lighting differences toward one shared cast, so
+   the sequence reads as one continuous location rather than four discrete
+   shoots. */
+.scroll-scene-grade-tint {
+  background: oklch(from var(--kraft) l c h / 0.14);
+  mix-blend-mode: soft-light;
+}
+
+/* prefers-reduced-motion freezes on the mailboxes frame specifically (a
+   representative "on the route" beat, not the very first or last frame):
+   every layer is hidden by default, then mailboxes alone is shown sharp
+   (no blur, no anisotropic stretch) at a static transform equal to the
+   shared camera function at its own local ~50% (global t=40) —
+   geometrically consistent with the moving version, just held still.
+   `animation: none` fully removes the scroll-timeline rather than relying
+   on the global 0.01ms-duration rule above, which doesn't make sense for a
+   scroll-linked (not time-linked) animation. `!important` on the shorthand
+   because the per-layer `[data-scene="…"]` rules above (which only set
+   `animation-name` / `animation-range`) are more specific than this plain
+   `.scroll-scene-layer` selector and would otherwise win for
+   `animation-name` alone — harmless in practice (the shorthand still zeroes
+   `animation-timeline`/`animation-duration`, so nothing actually plays),
+   but not worth leaving to cascade specificity. */
 @media (prefers-reduced-motion: reduce) {
   .scroll-scene-layer {
-    animation: none;
+    animation: none !important;
     opacity: 0;
+    filter: none;
+    transform: none;
   }
   .scroll-scene-layer[data-scene="mailboxes"] {
     opacity: 1;
+    transform: translate(2.2%, -1.2%) scale(1.18);
   }
 }

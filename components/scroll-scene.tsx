@@ -1,5 +1,11 @@
 "use client";
 
+// Reinstated (round 4): the round-3 illustrated replacement,
+// components/journey-scene.tsx, was itself rejected by the client ("this
+// is just moving the background, I don't like it at all") and reverted
+// back to this photographic scene per client direction. See this file's
+// own doc comment below for how the scene works.
+
 import * as React from "react";
 import Image from "next/image";
 
@@ -48,12 +54,19 @@ function getServerSnapshot() {
 
 /**
  * Fixed, full-viewport photographic backdrop that carries the visitor
- * through the mail's journey — van, mailboxes, street, front door — as
- * continuous forward motion (Ken Burns scale/pan per layer, blurred
- * hand-offs between layers) driven by total document scroll. Every layer's
- * motion lives in `.scroll-scene-layer`'s `@keyframes` in globals.css,
- * scroll-linked via a native `scroll(root)` timeline, so it's off the main
- * thread and needs no scroll listener.
+ * through the mail's journey — van, mailboxes, street, front door — as one
+ * continuous forward camera move driven by total document scroll, not four
+ * independent clips (client correction, round 2: "I want it to be
+ * connected"). Every layer's motion lives in `.scroll-scene-layer`'s
+ * `@keyframes` in globals.css: scale/pan are the same shared linear
+ * function of absolute scroll evaluated at each layer's own keyframe
+ * stops (so it never zooms out or reverses pan between layers), and each
+ * hand-off is a brief, heavily-blurred directional whip-pan rather than a
+ * soft dissolve. `.scroll-scene-grade` / `-tint` add one uniform vignette
+ * + warm cast across all four photos so their lighting differences don't
+ * themselves read as "a different photo." All of it is scroll-linked via a
+ * native `scroll(root)` timeline, so it's off the main thread and needs no
+ * scroll listener.
  *
  * Every section on the page now renders directly on top of this layer —
  * no card behind them (client correction: "the content should be on the
@@ -70,7 +83,7 @@ function getServerSnapshot() {
  * background, an intentional, sensible fallback, not a broken one.
  * `prefers-reduced-motion` freezes on the mailboxes frame (a
  * representative "on the route" beat) instead of animating or
- * disappearing.
+ * disappearing — no pan, zoom, or whip-blur survives that freeze.
  */
 export function ScrollScene() {
   const enabled = React.useSyncExternalStore(
@@ -102,6 +115,13 @@ export function ScrollScene() {
           />
         </div>
       ))}
+      {/* Shared, static (non-scroll-linked) color grade: a warm vignette
+          plus a low-opacity warm cast applied once across all four photos,
+          so their individual lighting/white-balance differences don't
+          telegraph "different photo" at each whip-cut (see
+          .scroll-scene-grade / -tint in globals.css). */}
+      <div className="scroll-scene-grade absolute inset-0" />
+      <div className="scroll-scene-grade-tint absolute inset-0" />
       {/* Paper-toned wash: ties the four photos into one consistent
           palette and is the primary legibility mechanism now that page
           content sits directly on this scene instead of behind opaque

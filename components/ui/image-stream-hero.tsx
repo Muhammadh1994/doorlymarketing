@@ -1,5 +1,10 @@
 "use client";
 
+// Un-retired: the round-3 hero restructure (no card, text bracketing a
+// single unified scene) was reverted per client feedback, so the hero is
+// back to its own local corridor animation layered under a card — see
+// hero.tsx.
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

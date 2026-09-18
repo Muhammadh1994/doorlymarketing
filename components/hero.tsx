@@ -18,6 +18,10 @@ const CORRIDOR_IMAGES: StreamImage[] = [
 export function Hero() {
   return (
     <section id="top" className="relative">
+      {/* Full-bleed by construction: this section renders as a sibling of
+          <main> (see app/page.tsx), outside its padded max-w-[1400px]
+          column, so it's naturally the full viewport width — no negative
+          margin/transform trickery needed. */}
       <ImageStreamHero
         images={CORRIDOR_IMAGES}
         cards={9}
@@ -29,7 +33,7 @@ export function Hero() {
             background per the client's correction), the hero keeps its own
             card: it's layered right over the moving postcard corridor, so
             it needs real contrast rather than a text-shadow halo. */}
-        <div className="relative z-10 flex h-full min-h-[520px] flex-col items-center justify-center px-4 py-10 text-center sm:min-h-[580px] sm:px-6 lg:min-h-[640px]">
+        <div className="relative z-10 mx-auto flex min-h-[520px] max-w-[1400px] flex-col items-center justify-center px-4 py-10 text-center sm:min-h-[580px] sm:px-6 lg:min-h-[640px]">
           <Reveal className="rounded-3xl border border-border bg-card/95 px-8 py-8 shadow-panel backdrop-blur-sm sm:px-12 sm:py-10">
             <p className="font-display text-4xl leading-none font-bold tracking-tight text-balance text-foreground sm:text-5xl lg:text-6xl">
               Doorly Marketing
