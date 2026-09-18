@@ -8,27 +8,33 @@
 
 import * as React from "react";
 import Image from "next/image";
+import { BASE_PATH } from "@/lib/utils";
 
+// next/image's automatic basePath prefixing turned out to be
+// inconsistent under `images.unoptimized: true` — it worked for these
+// `fill`-mode layers but silently failed for a plain width/height <Image>
+// elsewhere (why-direct-mail.tsx). Rather than trust it case by case,
+// BASE_PATH is now applied explicitly everywhere, here included.
 const SCENE_LAYERS = [
   {
     key: "van",
-    src: "/images/stock/mail-truck-driving.jpg",
+    src: `${BASE_PATH}/images/stock/mail-truck-driving.jpg`,
     alt: "",
     priority: true,
   },
   {
     key: "mailboxes",
-    src: "/images/stock/mailboxes-row.jpg",
+    src: `${BASE_PATH}/images/stock/mailboxes-row.jpg`,
     alt: "",
   },
   {
     key: "street",
-    src: "/images/stock/suburban-street.jpg",
+    src: `${BASE_PATH}/images/stock/suburban-street.jpg`,
     alt: "",
   },
   {
     key: "door",
-    src: "/images/stock/house-front-door.jpg",
+    src: `${BASE_PATH}/images/stock/house-front-door.jpg`,
     alt: "",
   },
 ] as const;

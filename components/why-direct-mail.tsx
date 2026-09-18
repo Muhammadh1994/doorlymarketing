@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/reveal";
+import { BASE_PATH } from "@/lib/utils";
 
 const VALUE_PROPS = [
   {
@@ -45,7 +46,7 @@ export function WhyDirectMail() {
                 own object, same reasoning as the postcard mockup. */}
             <figure className="mt-8 overflow-hidden rounded-2xl border border-border">
               <Image
-                src="/reference/postcard-flatlay.jpeg"
+                src={`${BASE_PATH}/reference/postcard-flatlay.jpeg`}
                 alt="Real postcard ad-space mockups in bold color-block layouts, laid out on a wooden desk next to a USPS route map"
                 width={1376}
                 height={768}
