@@ -34,7 +34,7 @@ export function Hero() {
             card: it's layered right over the moving postcard corridor, so
             it needs real contrast rather than a text-shadow halo. */}
         <div className="relative z-10 mx-auto flex min-h-[520px] max-w-[1400px] flex-col items-center justify-center px-4 py-10 text-center sm:min-h-[580px] sm:px-6 lg:min-h-[640px]">
-          <Reveal className="rounded-3xl border border-border bg-card/95 px-8 py-8 shadow-panel backdrop-blur-sm sm:px-12 sm:py-10">
+          <Reveal className="rounded-3xl border border-border bg-card px-8 py-8 shadow-panel sm:px-12 sm:py-10">
             <p className="font-display text-4xl leading-none font-bold tracking-tight text-balance text-foreground sm:text-5xl lg:text-6xl">
               Doorly Marketing
             </p>
