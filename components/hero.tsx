@@ -1,18 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { ImageStreamHero, type StreamImage } from "@/components/ui/image-stream-hero";
 import { Reveal } from "@/components/reveal";
+import { BASE_PATH } from "@/lib/utils";
 
 // Real photos, not the generated postcard illustrations: the client asked
 // for the hero corridor to look "as realistic as possible." This cycles
 // through the actual mail journey — their own postcard mockups, then the
 // truck, mailboxes, street, and a real front door — which also sets up the
 // full-page scroll scene below (components/scroll-scene.tsx).
+//
+// ImageStreamHero renders these through a plain <img>, not next/image, so
+// BASE_PATH has to be prepended by hand — see lib/utils.ts for why.
 const CORRIDOR_IMAGES: StreamImage[] = [
-  { src: "/reference/postcard-flatlay.jpeg" },
-  { src: "/images/stock/mail-truck-driving.jpg" },
-  { src: "/images/stock/mailboxes-row.jpg" },
-  { src: "/images/stock/suburban-street.jpg" },
-  { src: "/images/stock/house-front-door.jpg" },
+  { src: `${BASE_PATH}/reference/postcard-flatlay.jpeg` },
+  { src: `${BASE_PATH}/images/stock/mail-truck-driving.jpg` },
+  { src: `${BASE_PATH}/images/stock/mailboxes-row.jpg` },
+  { src: `${BASE_PATH}/images/stock/suburban-street.jpg` },
+  { src: `${BASE_PATH}/images/stock/house-front-door.jpg` },
 ];
 
 export function Hero() {
