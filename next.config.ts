@@ -7,10 +7,13 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   // Project pages serve at https://<user>.github.io/doorlymarketing/, not
   // the domain root, so every internal asset/link needs this subpath baked
-  // in. Drop these two lines if this ever moves to a custom domain or a
-  // <user>.github.io root repo.
-  basePath: "/doorlymarketing",
-  assetPrefix: "/doorlymarketing/",
+  // in. Scoped to production only — applying it in dev too makes
+  // `npm run dev` 404 at localhost:PORT/ (it'd only respond under
+  // /doorlymarketing). Drop both entirely if this ever moves to a custom
+  // domain or a <user>.github.io root repo.
+  ...(process.env.NODE_ENV === "production"
+    ? { basePath: "/doorlymarketing", assetPrefix: "/doorlymarketing/" }
+    : {}),
 };
 
 export default nextConfig;
