@@ -22,7 +22,11 @@ const AD_SPACES: AdSpace[] = [
     name: "Featured Spot",
     caption: "The biggest space on the mailer",
     span: "col-span-2 md:row-span-2",
-    height: "h-44 md:h-auto",
+    // Literal px, not h-44: Tailwind v4's scale utilities compile to
+    // calc(var(--spacing) * N), which some mobile Safari versions fail to
+    // resolve correctly, leaving the tile unconstrained-tall. A plain
+    // pixel value has no custom-property/calc() dependency to break.
+    height: "h-[176px] md:h-auto",
     tone: "red",
     corners: "rounded-t-[1.1rem] md:rounded-t-none md:rounded-l-[1.1rem]",
   },
@@ -30,7 +34,7 @@ const AD_SPACES: AdSpace[] = [
     name: "Standard Spot",
     caption: "Prime placement, shared cost",
     span: "col-span-2",
-    height: "h-32 md:h-auto",
+    height: "h-[128px] md:h-auto",
     tone: "teal",
     corners: "md:rounded-tr-[1.1rem]",
   },
@@ -38,7 +42,7 @@ const AD_SPACES: AdSpace[] = [
     name: "Starter Spot",
     caption: "Get on the mailer for less",
     span: "col-span-1",
-    height: "h-28 md:h-auto",
+    height: "h-[112px] md:h-auto",
     tone: "gold",
     corners: "rounded-bl-[1.1rem] md:rounded-bl-none",
   },
@@ -46,7 +50,7 @@ const AD_SPACES: AdSpace[] = [
     name: "Starter Spot",
     caption: "Get on the mailer for less",
     span: "col-span-1",
-    height: "h-28 md:h-auto",
+    height: "h-[112px] md:h-auto",
     tone: "kraft",
     corners: "rounded-br-[1.1rem]",
   },
